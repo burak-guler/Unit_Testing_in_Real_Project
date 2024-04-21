@@ -4,9 +4,9 @@ namespace UdemyRealWorldUnitTest.Web.Models
 {
     public partial class UdemyUnitTestDBContext : DbContext
     {
-        public UdemyUnitTestDBContext()
-        {
-        }
+        //public UdemyUnitTestDBContext()
+        //{
+        //}
 
         public UdemyUnitTestDBContext(DbContextOptions<UdemyUnitTestDBContext> options)
             : base(options)

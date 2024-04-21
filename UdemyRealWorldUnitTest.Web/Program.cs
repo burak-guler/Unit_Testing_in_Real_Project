@@ -10,7 +10,7 @@ builder.Services.AddDbContext<UdemyUnitTestDBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
-builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository));
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
