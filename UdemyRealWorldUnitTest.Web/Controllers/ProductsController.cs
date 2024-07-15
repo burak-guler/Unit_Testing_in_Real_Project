@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using UdemyRealWorldUnitTest.Web.Models;
 using UdemyRealWorldUnitTest.Web.Repository;
 
@@ -13,17 +14,22 @@ namespace UdemyRealWorldUnitTest.Web.Controllers
     public class ProductsController : Controller
     {
         private readonly  IRepository<Product> _repository;
+        IMemoryCache _memoryCache;
 
-        public ProductsController(IRepository<Product> repository)
+        public ProductsController(IRepository<Product> repository,IMemoryCache memoryCache)
         {
             _repository = repository;
+            _memoryCache = memoryCache;
         }
        
 
         // GET: Products
         public async Task<IActionResult> Index()
         {
-            return View(await _repository.GetAll());
+            var products = await _repository.GetAll();
+
+            _memoryCache.Set("ProductList",products);
+            return View(products);
         }
 
         // GET: Products/Details/5
@@ -32,6 +38,15 @@ namespace UdemyRealWorldUnitTest.Web.Controllers
             if (id == null)
             {
                 return RedirectToAction("Index");
+            }
+
+            var  productList = _memoryCache.Get<List<Product>>("ProductList");
+            var productCache=  productList.Where(x=>x.Id==id).FirstOrDefault();
+
+            var cacheIsSelected = _memoryCache.TryGetValue("ProductList", out List<Product> value);
+            if (_memoryCache.TryGetValue("ProductList", out List<Product> data))
+            {
+                var cacheData = data;
             }
 
             var product = await _repository.GetById((int)id);

@@ -15,6 +15,9 @@ builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+//In-Memory Cache yapabilmek için ekleyelim
+builder.Services.AddMemoryCache();
+
 
 var app = builder.Build();
 
